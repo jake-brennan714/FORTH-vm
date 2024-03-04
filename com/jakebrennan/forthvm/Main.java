@@ -11,17 +11,21 @@ public class Main {
         HashMap<String, String[]> words = new HashMap<>();
         Stack<String> stack = new Stack<>();
         Stack<String> retStack = new Stack<>();
+        int[] memory = new int[32768];
         for (int i = 0; i < prog.length; i++) {
             if (i == 0 && prog[i].charAt(0) == ':') {
                 i++;
                 String[] def = new String[prog.length - 2];
                 for (int j = i + 1; j < prog.length; j++) {
+                    if (prog[j].charAt(0) == ';') {
+                        break;
+                    }
                     def[j -2] = prog[j];
                 }
                 words.put(prog[i], def);
             } else {
-                int num1, num2, num3, imd;
-                String topOfStack;
+                int num1, num2, num3, imd, addr;
+                String topOfStack, addrString;
                 switch (prog[i].charAt(0)) {
                     case '+':
                         num2 = Integer.parseInt(stack.pop());
@@ -123,6 +127,82 @@ public class Main {
                                 } else {
                                     stack.push("0");
                                 }
+                                break;
+                            case "0":
+                                num1 = Integer.parseInt(stack.pop());
+                                if (num1 > 0) {
+                                    stack.push("1");
+                                } else {
+                                    stack.push("0");
+                                }
+                                break;
+                            case "<":
+                                num2 = Integer.parseInt(stack.pop());
+                                num1 = Integer.parseInt(stack.pop());
+                                if (num1 < num2) {
+                                    stack.push("1");
+                                } else {
+                                    stack.push("0");
+                                }
+                                break;
+                            case "<>":
+                                num2 = Integer.parseInt(stack.pop());
+                                num1 = Integer.parseInt(stack.pop());
+                                if (num1 != num2) {
+                                    stack.push("1");
+                                } else {
+                                    stack.push("0");
+                                }
+                                break;
+                            case "=":
+                                num2 = Integer.parseInt(stack.pop());
+                                num1 = Integer.parseInt(stack.pop());
+                                if (num1 == num2) {
+                                    stack.push("1");
+                                } else {
+                                    stack.push("0");
+                                }
+                                break;
+                            case ">":
+                                num2 = Integer.parseInt(stack.pop());
+                                num1 = Integer.parseInt(stack.pop());
+                                if (num1 > num2) {
+                                    stack.push("1");
+                                } else {
+                                    stack.push("0");
+                                }
+                                break;
+                            case "!":
+                                addrString = stack.pop();
+                                num1 = Integer.parseInt(stack.pop());
+                                if (addrString.charAt(0) == '$' || addrString.startsWith("0x")) {
+                                    addr = Integer.parseInt(addrString.substring(1), 16);
+                                } else if (addrString.startsWith("0b")) {
+                                    addr = Integer.parseInt(addrString.substring(2), 2);
+                                } else if (addrString.startsWith("0q")) {
+                                    addr = Integer.parseInt(addrString.substring(2), 8);
+                                } else if (addrString.startsWith("0d")) {
+                                    addr = Integer.parseInt(addrString.substring(2));
+                                } else {
+                                    addr = Integer.parseInt(addrString);
+                                }
+                                memory[addr] = num1;
+                                break;
+                            case "+!":
+                                addrString = stack.pop();
+                                num1 = Integer.parseInt(stack.pop());
+                                if (addrString.charAt(0) == '$' || addrString.startsWith("0x")) {
+                                    addr = Integer.parseInt(addrString.substring(1), 16);
+                                } else if (addrString.startsWith("0b")) {
+                                    addr = Integer.parseInt(addrString.substring(2), 2);
+                                } else if (addrString.startsWith("0q")) {
+                                    addr = Integer.parseInt(addrString.substring(2), 8);
+                                } else if (addrString.startsWith("0d")) {
+                                    addr = Integer.parseInt(addrString.substring(2));
+                                } else {
+                                    addr = Integer.parseInt(addrString);
+                                }
+                                memory[addr] += num1;
                                 break;
                         }
                         break;
