@@ -12,6 +12,8 @@ public class Main {
         Stack<String> stack = new Stack<>();
         Stack<String> retStack = new Stack<>();
         int[] memory = new int[32768];
+        String output = "";
+        Stack<String> wordStack = new Stack<>();
         for (int i = 0; i < prog.length; i++) {
             if (i == 0 && prog[i].charAt(0) == ':') {
                 i++;
@@ -51,7 +53,7 @@ public class Main {
                     case '/':
                         num2 = Integer.parseInt(stack.pop());
                         num1 = Integer.parseInt(stack.pop());
-                        int quotient = num1 + num2;
+                        int quotient = num1 / num2;
                         stack.push("" + quotient);
                         break;
                     default:
@@ -251,12 +253,43 @@ public class Main {
                             case "OVER":
                                 num2 = Integer.parseInt(stack.pop());
                                 num1 = Integer.parseInt(stack.pop());
+                                stack.push("" + num2);
                                 stack.push("" + num1);
+                                break;
+                            case "XOR":
+                                num2 = Integer.parseInt(stack.pop());
+                                num1 = Integer.parseInt(stack.pop());
+                                num3 = num1 ^ num2;
+                                stack.push("" + num3);
+                                break;
+                            case "CR":
+                                output += "\n";
+                                break;
+                            case ".":
+                                output += stack.pop();
+                                break;
+                            default:
+                                if (words.containsKey(prog[i])) {
+                                    for (String str : words.get(prog[i])) {
+                                        wordStack.push(str);
+                                    }
+                                    for (int k = 0; k < wordStack.size(); k++) {
+                                        stack.push(wordStack.pop());
+                                    }
+                                } else {
+                                    stack.push(prog[i]);
+                                }
+                                break;
+
                         }
                         break;
+
                 }
 
             }
         }
+        System.out.println(output + " ok");
+        String finalStack = stack.toString();
+        System.out.println("Final stack: " + finalStack);
     }
 }
