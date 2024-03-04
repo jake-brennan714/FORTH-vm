@@ -1,0 +1,3 @@
+# Ignore IntelliJ local settings and build output
+.idea
+out/*
