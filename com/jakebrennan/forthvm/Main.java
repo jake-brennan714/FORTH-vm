@@ -251,6 +251,7 @@ public class Main {
                             case "OVER":
                                 num2 = Integer.parseInt(stack.pop());
                                 num1 = Integer.parseInt(stack.pop());
+                                stack.push("" + num1);
                         }
                         break;
                 }
