@@ -204,6 +204,53 @@ public class Main {
                                 }
                                 memory[addr] += num1;
                                 break;
+                            case "?DUP":
+                                num1 = Integer.parseInt(stack.peek());
+                                if (num1 != 0) {
+                                    stack.push("" + num1);
+                                }
+                                break;
+                            case "@":
+                                addrString = stack.pop();
+                                if (addrString.charAt(0) == '$' || addrString.startsWith("0x")) {
+                                    addr = Integer.parseInt(addrString.substring(1), 16);
+                                } else if (addrString.startsWith("0b")) {
+                                    addr = Integer.parseInt(addrString.substring(2), 2);
+                                } else if (addrString.startsWith("0q")) {
+                                    addr = Integer.parseInt(addrString.substring(2), 8);
+                                } else if (addrString.startsWith("0d")) {
+                                    addr = Integer.parseInt(addrString.substring(2));
+                                } else {
+                                    addr = Integer.parseInt(addrString);
+                                }
+                                stack.push("" + memory[addr]);
+                                break;
+                            case "AND":
+                                num2 = Integer.parseInt(stack.pop());
+                                num1 = Integer.parseInt(stack.pop());
+                                num3 = num1 & num2;
+                                stack.push("" + num3);
+                                break;
+                            case "DROP":
+                                stack.pop();
+                                break;
+                            case "NOT":
+                                num1 = Integer.parseInt(stack.pop());
+                                if (num1 != 0) {
+                                    stack.push("" + 0);
+                                } else {
+                                    stack.push("" + 1);
+                                }
+                                break;
+                            case "OR":
+                                num2 = Integer.parseInt(stack.pop());
+                                num1 = Integer.parseInt(stack.pop());
+                                num3 = num1 | num2;
+                                stack.push("" + num3);
+                                break;
+                            case "OVER":
+                                num2 = Integer.parseInt(stack.pop());
+                                num1 = Integer.parseInt(stack.pop());
                         }
                         break;
                 }
